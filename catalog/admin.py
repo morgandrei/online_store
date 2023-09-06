@@ -1,9 +1,13 @@
 from django.contrib import admin
 
-@admin.register(Student)
-class StudentAdmin(admin.ModelAdmin):
-	list_display = ('first_name', 'last_name')
+from catalog.models import Categories, Products
 
-@admin.register(Student)
+
+@admin.register(Categories)
 class StudentAdmin(admin.ModelAdmin):
-	list_display = ('first_name', 'last_name')
+    pass
+
+
+@admin.register(Products)
+class StudentAdmin(admin.ModelAdmin):
+    pass
