@@ -4,10 +4,14 @@ from catalog.models import Categories, Products
 
 
 @admin.register(Categories)
-class StudentAdmin(admin.ModelAdmin):
-    pass
+class CategoriesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'category_name',)
 
 
 @admin.register(Products)
-class StudentAdmin(admin.ModelAdmin):
-    pass
+class ProductsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product_name', 'price', 'category',)  # id, название, цена и категория
+    list_filter = ('category',)  # фильтровать по категории
+    search_fields = ('product_name', 'description',)  # поиск по названию и полю описания.
+
+
