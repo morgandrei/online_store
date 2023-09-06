@@ -23,8 +23,8 @@ class Products(models.Model):
 
     category = models.CharField(verbose_name='Категория')  # категория,
     price = models.IntegerField(verbose_name='Цена')  # цена за покупку
-    date_create = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')  # дата создания
-    date_last_change = models.DateTimeField(default=datetime.now, verbose_name='Дата последнего изменения')  # дата последнего изменения
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')  # дата создания
+    date_last_change = models.DateTimeField(auto_now_add=True, verbose_name='Дата последнего изменения')  # дата последнего изменения
 
     def __str__(self):
         return self.product_name
