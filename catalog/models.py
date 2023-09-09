@@ -25,8 +25,8 @@ class Products(models.Model):
 
     category = models.CharField(max_length=100, verbose_name='Категория')  # категория,
     price = models.IntegerField(verbose_name='Цена')  # цена за покупку
-    date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')  # дата создания
-    date_last_change = models.DateTimeField(auto_now_add=True, verbose_name='Дата последнего изменения')  # дата последнего изменения
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')  # дата создания
+    updated_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата последнего изменения')  # дата последнего изменения
 
     def __str__(self):
         return self.product_name
@@ -34,3 +34,15 @@ class Products(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+
+class Contacts(models.Model):
+    contact_name = models.CharField(max_length=100, verbose_name='Имя')
+    phone = models.CharField(max_length=50, verbose_name='Телефон')
+    message = models.TextField(verbose_name='Сообщение')
+
+    def __str__(self):
+        return self.contact_name
+
+    class Meta:
+        pass

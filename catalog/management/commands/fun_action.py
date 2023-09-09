@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 
-from catalog.models import Products
+from catalog.models import Products, Categories
 
 
 class Command(BaseCommand):
@@ -21,3 +21,9 @@ class Command(BaseCommand):
         Products.objects.all().delete()
         for product in products_list:
             Products.objects.create(**product)
+
+#class Command(BaseCommand):
+
+    #def handle(self, *args, **options):
+        #Categories.objects.all().delete()
+        #return os.system("python manage.py loaddata data.json")
