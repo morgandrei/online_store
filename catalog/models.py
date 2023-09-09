@@ -23,10 +23,10 @@ class Products(models.Model):
     description = models.TextField(verbose_name='Описание')  # описание
     product_pic = models.ImageField(upload_to='products', verbose_name='Изображение', **NULLABLE)  # изображение(превью)
 
-    category = models.CharField(max_length=100, verbose_name='Категория')  # категория,
+    category = models.ForeignKey(Categories, on_delete=models.CASCADE, verbose_name='Категория')  # категория,
     price = models.IntegerField(verbose_name='Цена')  # цена за покупку
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')  # дата создания
-    updated_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата последнего изменения')  # дата последнего изменения
+    created_at = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')  # дата создания
+    updated_at = models.DateTimeField(default=datetime.now, verbose_name='Дата последнего изменения')  # дата последнего изменения
 
     def __str__(self):
         return self.product_name
