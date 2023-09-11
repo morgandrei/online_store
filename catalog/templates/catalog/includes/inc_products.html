@@ -1,0 +1,16 @@
+{% load my_tags %}
+<div class="col-md-4">
+    <div class="card mb-5 shadow-sm">
+        <img src="{% mediapath object.product_pic %}" class="rounded mx-auto d-block" alt="preview" height="300">
+        <div class="card-body">
+            <p class="card-text">{{ object }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                    <a class="p-2 btn btn-outline-primary" href="{% url 'product' object.pk %}">Подробнее</a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">В корзину</button>
+                </div>
+                <small class="text-body-secondary">9 mins</small>
+            </div>
+        </div>
+    </div>
+</div>

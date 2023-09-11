@@ -23,3 +23,10 @@ def catalog(request):
         'object_list': product_list
     }
     return render(request, 'catalog/catalog.html', context)
+
+
+def product(request, pk):
+    context = {
+        'object': Products.objects.get(pk=pk)
+    }
+    return render(request, 'catalog/product.html', context)

@@ -1,0 +1,21 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+{% load my_tags %}
+
+<img src="{% mediapath object.product_pic %}" class="rounded mx-auto d-block mb-4" alt="preview" height="400">
+
+<div class="container">
+    <div class="card mb-4 box-shadow">
+        <div class="card-body">
+            <p>{{ object.description }}</p>
+            <ul class="list-unstyled mt-3 mb-2 text-start m-2">
+                <li>- Категория: {{ object.category }}</li>
+            </ul>
+            <h3 class="card-title pricing-card-title">{{ object.price }} руб.</h3>
+            <a href="#" type="button" class="btn btn-lg btn-outline-primary">Купить</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
