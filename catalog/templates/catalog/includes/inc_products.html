@@ -3,7 +3,8 @@
     <div class="card mb-5 shadow-sm">
         <img src="{% mediapath object.product_pic %}" class="rounded mx-auto d-block" alt="preview" height="300">
         <div class="card-body">
-            <p class="card-text">{{ object }}</p>
+            <p class="card-text">{{ object.product_name }}</p>
+            <p class="card-text">{{ object.description|slice:100 }} </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a class="p-2 btn btn-outline-primary" href="{% url 'product' object.pk %}">Подробнее</a>
