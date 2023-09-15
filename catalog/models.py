@@ -1,5 +1,4 @@
 from _datetime import datetime
-
 from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
@@ -8,7 +7,8 @@ NULLABLE = {'blank': True, 'null': True}
 class Categories(models.Model):
     category_name = models.CharField(max_length=150, verbose_name='Категория')  # наименование
     description = models.TextField(verbose_name='Описание')  # описание
-#    created_at = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')
+
+    #    created_at = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')
 
     def __str__(self):
         return self.category_name
@@ -26,7 +26,8 @@ class Products(models.Model):
     category = models.ForeignKey(Categories, on_delete=models.CASCADE, verbose_name='Категория')  # категория,
     price = models.IntegerField(verbose_name='Цена')  # цена за покупку
     created_at = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')  # дата создания
-    updated_at = models.DateTimeField(default=datetime.now, verbose_name='Дата последнего изменения')  # дата последнего изменения
+    updated_at = models.DateTimeField(default=datetime.now,
+                                      verbose_name='Дата последнего изменения')  # дата последнего изменения
 
     def __str__(self):
         return self.product_name
@@ -45,4 +46,22 @@ class Contacts(models.Model):
         return self.contact_name
 
     class Meta:
-        pass
+        verbose_name = 'контакт'
+        verbose_name_plural = 'контакты'
+
+
+class Blog(models.Model):
+    title = models.CharField(max_length=100, verbose_name='заголовок')
+    slug = models.CharField(max_length=100, verbose_name='slug', **NULLABLE)
+    content = models.TextField(verbose_name='содержимое')
+    preview = models.ImageField(verbose_name='превью', **NULLABLE)
+    created_at = models.DateField(auto_now_add=True, verbose_name='дата создания')
+    is_published = models.BooleanField(default=True, verbose_name='признак публикации')
+    views_count = models.IntegerField(default=0, verbose_name='количество просмотров')
+
+    def __str__(self):
+        return f'{self.title} ({self.slug})'
+
+    class Meta:
+        verbose_name = 'блог'
+        verbose_name_plural = 'блоги'
