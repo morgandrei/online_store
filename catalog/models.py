@@ -1,5 +1,7 @@
 from _datetime import datetime
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -65,3 +67,23 @@ class Blog(models.Model):
     class Meta:
         verbose_name = 'блог'
         verbose_name_plural = 'блоги'
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Products, on_delete=models.CASCADE)
+    version_number = models.CharField(max_length=5, verbose_name='номер версии')
+    version_name = models.CharField(max_length=150, verbose_name='имя версии')
+    is_current = models.BooleanField(default=False, verbose_name='признак текущей версии')
+
+    def __str__(self):
+        return f'{self.product.product_name} - {self.version_name}({self.version_number})'
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+
+
+@receiver(pre_save, sender=Version)
+def update_active_versions(sender, instance, **kwargs):
+    if instance.is_current_version:  # Проверяем, если версия становится активной
+        Version.objects.filter(product=instance.product).exclude(pk=instance.pk).update(is_current_version=False)

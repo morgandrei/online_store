@@ -1,15 +1,19 @@
+from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
-from catalog.models import Products, Contacts, Blog
+from catalog.forms import VersionForm, ProductsForm
+from catalog.models import Products, Contacts, Blog, Version
 
 
 def index(request):
     product_list = Products.objects.all()
     context = {
-        'object_list': product_list
+        'object_list': product_list,
+
+
     }
     return render(request, 'catalog/index.html', context)
 
@@ -30,24 +34,6 @@ class ContactsView(TemplateView):
 
 class CatalogListView(ListView):
     model = Products
-
-
-class ProductsDetailView(DetailView):
-    model = Products
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = queryset.filter(pk=self.kwargs.get('pk'))
-        return queryset
-
-    def get_context_data(self, *args, **kwargs):
-        #context_data = super().get_context_data(*args, **kwargs)
-        #product_item = Products.objects.get(pk=self.kwargs.get('pk'))
-        context_data = {
-            'object': Products.objects.get(pk=self.kwargs.get('pk'))
-        }
-
-        return context_data
 
 
 class BlogCreateView(CreateView):
@@ -103,9 +89,82 @@ class BlogDeleteView(DeleteView):
     model = Blog
     success_url = reverse_lazy('list')
 
+
 def toggle_activity(request, pk):
     student_item = get_object_or_404(Blog, pk=pk)
     student_item.is_published = False if student_item.is_published else True
 
     student_item.save()
     return redirect(reverse('list'))
+
+
+class ContextViewMixin:
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        VersionFormset = inlineformset_factory(Products, Version, form=VersionForm, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = VersionFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = VersionFormset(instance=self.object)
+        return context_data
+
+    def form_valid(self, form):
+        formset = self.get_context_data()['formset']
+        self.object = form.save()
+        if formset.is_valid():
+            formset.instance = self.object
+            formset.save()
+
+        return super().form_valid(form)
+
+
+class ProductsCreateView(ContextViewMixin, CreateView):
+    model = Products
+    form_class = ProductsForm
+    success_url = reverse_lazy('index')
+
+
+class ProductsListView(ListView):
+    model = Products
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        version_list = []
+        for i in context['object_list']:
+            version = Version.objects.filter(product=i.pk, is_current=True)
+            version_list += version
+
+        context['versions'] = version_list
+        return context
+
+
+class ProductsDetailView(DetailView):
+    model = Products
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(pk=self.kwargs.get('pk'))
+        return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        # context_data = super().get_context_data(*args, **kwargs)
+        # product_item = Products.objects.get(pk=self.kwargs.get('pk'))
+        context_data = {
+            'object': Products.objects.get(pk=self.kwargs.get('pk'))
+        }
+
+        return context_data
+
+
+class ProductsUpdateView(ContextViewMixin, UpdateView):
+    model = Products
+    form_class = ProductsForm
+
+    def get_success_url(self):
+        return reverse('catalog:product', args=[self.kwargs.get('pk')])
+
+
+class ProductsDeleteView(DeleteView):
+    model = Products
+    success_url = reverse_lazy('index')
