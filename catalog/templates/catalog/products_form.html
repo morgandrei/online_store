@@ -11,7 +11,13 @@
 
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-outline-success">Добавить</button>
+                <button type="submit" class="btn btn-outline-success">
+                    {% if object %}
+                    Сохранить изменения
+                    {% else %}
+                    Добавить продукт в каталог
+                    {% endif %}
+                </button>
 
             </div>
         </div>
