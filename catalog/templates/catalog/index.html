@@ -8,7 +8,19 @@
 </div>
 <div class="row">
     <div class="col-12 mb-5">
-        <a class="btn btn-primary" href="{% url 'product_create' %}">Добавить продукт</a>
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary form-control" href="{% url 'product_create' %}">Добавить продукт</a>
+        {% else %}
+            <a class="btn btn-primary form-control" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button"
+           aria-expanded="false" aria-controls="multiCollapseExample1">Добавить продукт</a>
+            <div class="col">
+                <div class="collapse multi-collapse mb-5" id="multiCollapseExample1">
+                    <div class="card card-body mb-5">
+                        Войдите в свой аккаунт или зарегистрируйтесь, чтобы добавить продукт!
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
     <div class="container py-5">
         <div class="row">

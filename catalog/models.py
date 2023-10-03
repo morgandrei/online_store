@@ -1,4 +1,6 @@
 from _datetime import datetime
+
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -30,6 +32,7 @@ class Products(models.Model):
     created_at = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')  # дата создания
     updated_at = models.DateTimeField(default=datetime.now,
                                       verbose_name='Дата последнего изменения')  # дата последнего изменения
+    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, verbose_name='пользователь', **NULLABLE)
 
     def __str__(self):
         return self.product_name

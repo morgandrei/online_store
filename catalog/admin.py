@@ -14,6 +14,11 @@ class ProductsAdmin(admin.ModelAdmin):
     list_filter = ('category',)  # фильтровать по категории
     search_fields = ('product_name', 'description',)  # поиск по названию и полю описания.
 
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
+
 
 admin.site.register(Contacts)
 

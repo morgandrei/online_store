@@ -1,4 +1,7 @@
+from urllib import request
+
 from django.forms import inlineformset_factory
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
@@ -112,6 +115,8 @@ class ContextViewMixin:
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
         self.object = form.save()
+        self.object.user = self.request.user
+        self.object.save()
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
@@ -125,14 +130,15 @@ class ProductsCreateView(ContextViewMixin, CreateView):
     success_url = reverse_lazy('index')
 
 
+
 class ProductsListView(ListView):
     model = Products
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         version_list = []
-        for i in context['object_list']:
-            version = Version.objects.filter(product=i.pk, is_current=True)
+        for el in context['object_list']:
+            version = Version.objects.filter(product=el.pk, is_current=True)
             version_list += version
 
         context['versions'] = version_list
