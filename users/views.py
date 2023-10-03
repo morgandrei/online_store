@@ -57,9 +57,9 @@ def reset_password(request):
     if request.method == 'POST':
         input_email = request.POST.get('email')
         user = User.objects.filter(email=input_email).first()
-        password = ''.join(random.sample(string.digits + string.ascii_letters, 12))
+        password = User.objects.make_random_password()
         user.set_password(password)
-        user.save()
+        user.save(update_fields=['password'])
         send_mail(
             subject='Сброс пароля',
             message=f'''Вы успешно сбросили пароль для аккаунта {input_email}.\n Ваш новый пароль: {password}''',
