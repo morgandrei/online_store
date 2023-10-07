@@ -130,7 +130,6 @@ class ProductsCreateView(ContextViewMixin, CreateView):
     success_url = reverse_lazy('index')
 
 
-
 class ProductsListView(ListView):
     model = Products
 
