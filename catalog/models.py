@@ -33,6 +33,7 @@ class Products(models.Model):
     updated_at = models.DateTimeField(default=datetime.now,
                                       verbose_name='Дата последнего изменения')  # дата последнего изменения
     user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, verbose_name='пользователь', **NULLABLE)
+    is_published = models.BooleanField(default=False, verbose_name='признак публикации')
 
     def __str__(self):
         return self.product_name
@@ -40,6 +41,12 @@ class Products(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        permissions = [
+            (
+                'set_published',
+                'Can publish posts'
+            )
+        ]
 
 
 class Contacts(models.Model):
